@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fast-dummy-test
+  name: fast-dummy-test-deployment
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: fast-dummy-test
+  revisionHistoryLimit: 5
+  progressDeadlineSeconds: 300
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: fast-dummy-test
+    spec:
+      containers:
+      - name: fast-dummy-test-pod
+        image: tenetko/fast-dummy-test:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 80
+      imagePullSecrets:
+      - name: regcred
